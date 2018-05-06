@@ -116,6 +116,46 @@
           }
         }
       }
+    },
+    "ngx-flexboxgrid": {
+      "root": "projects/ngx-flexboxgrid",
+      "sourceRoot": "projects/ngx-flexboxgrid/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ngx-flexboxgrid/tsconfig.lib.json",
+            "project": "projects/ngx-flexboxgrid/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/ngx-flexboxgrid/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ngx-flexboxgrid/src/test.ts",
+            "tsConfig": "projects/ngx-flexboxgrid/tsconfig.spec.json",
+            "karmaConfig": "projects/ngx-flexboxgrid/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ngx-flexboxgrid/tsconfig.lib.json",
+              "projects/ngx-flexboxgrid/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "uilib"

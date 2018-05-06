@@ -1,1 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
+@import "~flexboxgrid/dist/flexboxgrid.css";
+
+body {
+  font-size: 14px;
+  line-height: 20px;
+  line-height: 1.42;
+  background: #f0f0f0;
+  color: #444444;
+  font-family: 'Open Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
