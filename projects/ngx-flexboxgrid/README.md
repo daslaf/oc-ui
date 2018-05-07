@@ -62,6 +62,27 @@ import { AppComponent } from './app.component';
 export class AppModule {}
 ```
 
+## Usage
+
+`ngx-flexboxgrid` has 3 main components: `fg-grid`, `fg-row` and `fg-col`. All of these components have an attribute selector as well, in case you want to apply it on another component (`fgGrid`, `fgRow` and `fgCol` respectively). 
+
+### Anatomy
+
+A regular container:
+
+```html
+<fg-grid>
+  <!-- `fg-rows` go here -->
+</fg-grid>
+```
+
+Make it fluid with `fgFluid` directive:
+
+```html
+<fg-grid fgFluid>
+  <!-- `fg-rows` go here -->
+</fg-grid>
+```
 
 
 ## Demo
