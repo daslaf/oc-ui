@@ -64,26 +64,155 @@ export class AppModule {}
 
 ## Usage
 
-`ngx-flexboxgrid` has 3 main components: `fg-grid`, `fg-row` and `fg-col`. All of these components have an attribute selector as well, in case you want to apply it on another component (`fgGrid`, `fgRow` and `fgCol` respectively). 
+`ngx-flexboxgrid` has three (3) main components: `NgxFlexboxgridComponent`, `NgxFlexboxgridRowComponent` and `NgxFlexboxgridColumnComponent`. All of these components have both element selectors and attribute selectors, in case you want to apply them standalone or on top of another component.
 
-### Anatomy
+```typescript
+@Component({
+  selector: 'fg-grid, [fgGrid]',
+  // ...
+})
+export class NgxFlexboxgridComponent { /* ... */}
 
-A regular container:
+@Component({
+  selector: 'fg-row, [fgRow]',
+  // ...
+})
+export class NgxFlexboxgridRowComponent { /* ... */}
+
+
+@Component({
+  selector: 'fg-col, [fgCol]',
+  // ...
+})
+export class NgxFlexboxgridColumnComponent { /* ... */}
+``` 
+
+So you usually would wrap columns in rows, and rows into a container. This is the basic shape of a `ngx-flexboxgrid` column grid:
 
 ```html
 <fg-grid>
-  <!-- `fg-rows` go here -->
+  <fg-row>
+    <fg-col cols="6,3,4,2">Column 1</fg-col>
+    <fg-col cols="6,3,4,2">Column 2</fg-col>
+    <fg-col cols="6,3,4,2">Column 3</fg-col>
+  </fg-row>
 </fg-grid>
 ```
 
-Make it fluid with `fgFluid` directive:
+We'll discuss the API for each component right now. Let's start with `fg-col`.
+
+### NgxFlexboxgridColumnComponent
+
+`<fg-col>` takes a single input `cols`, which expects a string of one (1) to four (4) comma separated values:
+
+```typescript
+@Component({
+  selector: 'custom-component',
+  template: `
+    <fg-grid>
+      <fg-row>
+        <fg-col cols="6,3,4,2">Column 1</fg-col>
+        <fg-col [cols]="'6,3,4,2'">Column 2</fg-col>
+        <fg-col [cols]="cols">Column 3</fg-col>
+      </fg-row>
+    </fg-grid>
+  `
+})
+export class CustomComponent {
+  cols: string = '6,3,4,2';
+}
+```
+
+Each value in the string passed to `cols` maps to one of the four (4) breakpoints available for media queries (`xs`, `sm`, `md` and `lg`) in `flexboxgrid`, and they basically describe the width of the column for that breakpoint. So our input `cols="6,3,4,2"` will be reduced into a single string:
+
+```
+Values in `cols`
+---6---3---4---2---
+
+Mapped through each breakpoint
+---xs--sm--md--lg--
+
+Will be reduced into the following string
+"col-xs-6 col-sm-3 col-md-4 col-lg-2"
+```
+
+And that value will be binded to the class property on the root `fg-col` element:
 
 ```html
-<fg-grid fgFluid>
-  <!-- `fg-rows` go here -->
-</fg-grid>
+<!-- Angular will output -->
+<fg-col class="col-xs-6 col-sm-3 col-md-4 col-lg-2">Column 1</fg-col>
 ```
 
+You can pass values from `1` to `12` for each breakpoint. 
+
+#### Skipping values
+
+If you want to skip a column for a given breakpoint, you can pass the `*` token and that breakpoint will be ignored. For instance, if you only need a `col-sm-4` and `col-lg-3` (notice we're skipping the `xs` and `md` breakpoints) your `cols` input should look like this:
+
+```html
+<fg-col cols="*,4,*,3">Column 1</fg-col>
+```
+
+Which wil translate into: 
+
+```html
+<!-- Angular will output -->
+<fg-col class="col-sm-4 col-lg-3">Column 1</fg-col>
+```
+
+With our new knowledge of skipping columns, lets say we only need a column for the `xs` breakpoint, that means we would have to skip the `sm`, `md` and `lg` breakpoints with the `*` token (or maybe not):
+
+```html
+<!-- This two declarations will output the same HTML -->
+<fg-col cols="6,*,*,*">Column 1</fg-col>
+<fg-col cols="6">Column 2</fg-col>
+
+<!-- Angular will output -->
+<fg-col class="col-xs-6">Column 1</fg-col>
+<fg-col class="col-xs-6">Column 2</fg-col>
+```
+
+Although both declarations output the same `HTML`, the second one is cheaper since we don't actually have to check the values for any of the breakpoints but `xs`. So, as a rule of thumb, only declare the columns you actually need.
+
+#### Auto width columns
+
+`flexboxgrid` also provides support for auto sizing columns, which means the column will take as much space as possible depending on its siblings and/or available remaining space. If you want auto sizing on a column, just pass the `auto` token to the specific breakpoint:
+
+```html
+<!-- Using `auto` in the `xs` breakpoint -->
+<fg-col cols="auto,4,3,2">Column 1</fg-col>
+
+<!-- Angular will output (notice there's no number in the first css class) -->
+<fg-col class="col-xs col-sm-4 col-md-3 col-lg-2">Column 1</fg-col>
+```
+
+That will make the column to have auto width for the `xs` breakpoint.
+
+And that covers the basics of the syntax for the `cols` input.
+
+#### Offsets
+
+In order to offset a column, you have to pass the `offset` and `width` values separated with a `-` to the specific breakpoint instead of only the column width. So if you want a regular `xs` column of width `9` and offset `3`:
+
+```html
+<!-- Using offset 3 and width 9 in the `xs` breakpoint and width 12 in `sm` breakpoint -->
+<fg-col cols="3-9, 12">Column 1</fg-col>
+
+<!-- Angular will output -->
+<fg-col class="col-xs-offset-3 col-xs-9 col-sm-12">Column 1</fg-col>
+```
+
+### NgxFlexboxgridRowComponent
+
+The API for `NgxFlexboxgridRowComponent` follows the same conventions as `NgxFlexboxgridColumnComponent`, but first lets discuss what are the capabilities of a row in `flexboxgrid`.
+
+So, a row is in charge of grouping a set of columns and also describes how 
+
+
+## Roadmap
+
+- Add tests
+- Add validation for unexpected values passed to rows and columns
 
 ## Demo
 
