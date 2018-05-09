@@ -333,9 +333,10 @@ Or even make it fluid:
 
 ## TODO
 
+- [ ] Improve stackblitz demo
 - [ ] Add tests
 - [ ] Add validation for unexpected values passed to rows and columns
-- [ ] Add support for reordering columns with `.first-` and `.last-` (might use a directive)
+- [ ] Add support for reordering columns with `.first-` and `.last-` (might use a directive or bind `order` to `style` for larger support)
 
 ## Demo
 
