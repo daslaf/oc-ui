@@ -14,7 +14,6 @@ Have you noticed that working with `CSS` column grids can get really verbose rea
 To use `ngx-flexboxgrid` in your project you need to install `flexboxgrid` and `ngx-flexboxgrid` via [npm](https://www.npmjs.com/package/ngx-flexboxgrid):
 
 ```bash
-// Get flexboxgrid and ngx-flexboxgrid
 $ npm install --save flexboxgrid ngx-flexboxgrid
 ```
 
@@ -179,16 +178,14 @@ Although both declarations output the same `HTML`, the second one is cheaper sin
 `flexboxgrid` also provides support for auto sizing columns, which means the column will take as much space as possible depending on its siblings and/or available remaining space. If you want auto sizing on a column, just pass the `auto` token to the specific breakpoint:
 
 ```html
-<!-- Using `auto` in the `xs` breakpoint -->
-<fg-col cols="auto,4,3,2">Column 1</fg-col>
+<!-- Using `auto` in the `xs` and `lg` breakpoints -->
+<fg-col cols="auto,4,3,auto">Column 1</fg-col>
 
-<!-- Angular will output (notice there's no number in the first css class) -->
-<fg-col class="col-xs col-sm-4 col-md-3 col-lg-2">Column 1</fg-col>
+<!-- Angular will output (notice there's no number in the `xs` and `lg` css classes) -->
+<fg-col class="col-xs col-sm-4 col-md col-lg">Column 1</fg-col>
 ```
 
-That will make the column to have auto width for the `xs` breakpoint.
-
-And that covers the basics of the syntax for the `cols` input.
+That will make the column to have auto width for the `xs` and `lg` breakpoints.
 
 #### Offsets
 
@@ -202,17 +199,143 @@ In order to offset a column, you have to pass the `offset` and `width` values se
 <fg-col class="col-xs-offset-3 col-xs-9 col-sm-12">Column 1</fg-col>
 ```
 
+And that pretty much covers the basics of the syntax for the `cols` input.
+
 ### NgxFlexboxgridRowComponent
 
-The API for `NgxFlexboxgridRowComponent` follows the same conventions as `NgxFlexboxgridColumnComponent`, but first lets discuss what are the capabilities of a row in `flexboxgrid`.
+The API for `NgxFlexboxgridRowComponent` follows the same conventions as `NgxFlexboxgridColumnComponent`. Lets discuss what are the capabilities of a row in `flexboxgrid` to begin with.
 
-So, a row is in charge of grouping a set of columns and also describes how 
+A `fg-row` is in charge of grouping a set of columns and describing three major fields of how columns will be distributed in the layout:
+
+- Horizontal alignment (justify-ing)
+- Vertical alignment
+- Space distribution between columns
+
+For implementing these capabilities, we provide three inputs for `fg-row`:
+
+### fgJustify
+
+To align content horizontally in `ngx-flexboxgrid` you want to pass a string of one (1) to four (4) comma separated values to `fgJustify`, each value mapping to a specific breakpoint just like with `fg-col`:
+
+```html
+<!-- Valid options are `start`, `center` and `end` -->
+<fg-row stJustify="start,*,center,end">
+   <!-- some columns here -->
+</fg-row>
+
+<!-- Angular will output-->
+<fg-row class="row start-xs center-md end-lg">
+    <!-- some columns here -->
+</fg-row>
+```
+
+> Notice how we skipped the `sm` breakpoint using the `*` token.
+
+### fgAlign
+
+Same rules apply to aligning content vertically. For this we use `fgAlign` input:
+
+```html
+<!-- Valid options are `top`, `middle` and `bottom` -->
+<fg-row stAlign="top,*,middle,bottom">
+   <!-- some columns here -->
+</fg-row>
+
+<!-- Angular will output-->
+<fg-row class="row top-xs middle-md bottom-lg">
+    <!-- some columns here -->
+</fg-row>
+```
+
+> Notice how we skipped the `sm` breakpoint using the `*` token.
+
+### fgSpacing
+
+For distribuiting whitespace within your columns, use `fgSpacing` input:
 
 
-## Roadmap
+```html
+<!-- Valid options are `around` and `betweem` -->
+<fg-row stAlign="around,*,*,between">
+   <!-- some columns here -->
+</fg-row>
 
-- Add tests
-- Add validation for unexpected values passed to rows and columns
+<!-- Angular will output-->
+<fg-row class="row around-xs between-lg">
+    <!-- some columns here -->
+</fg-row>
+```
+
+> Notice how we skipped both `sm` and `md` breakpoints using the `*` token.
+
+### fgReverse (NgxFlexboxgridRowReverseDirective)
+
+Reverse the direction of your row using `fgReverse`:
+
+```html
+<!-- Use fgReverse -->
+<fg-row fgReverse>
+   <!-- some columns here -->
+</fg-row>
+
+<!-- Angular will output -->
+<fg-row class="row reverse">
+    <!-- some columns here -->
+</fg-row>
+```
+
+> I might change `fgReverse` to be an `input` for next minor release of the package
+
+### NgxFlexboxgridRowComponent
+
+Last but not least, we need to contain our `fg-row`s in a container, and that's what `fg-grid` does:
+
+```html
+<!-- Wrap it in a grid container -->
+<fg-grid>
+  <fg-row>
+    <!-- Some columns -->
+  </fg-row>
+  <!-- ... More rows -->
+</fg-grid>
+
+<!-- Angular will output -->
+<fg-grid class="container">
+  <fg-row class="row">
+    <!-- Some columns -->
+  </fg-row>
+  <!-- ... More rows -->
+</fg-grid>
+```
+
+Or even make it fluid:
+
+```html
+<!-- Wrap it in a fluid container -->
+<fg-grid fgFluid>
+  <fg-row>
+    <!-- Some columns -->
+  </fg-row>
+  <!-- ... More rows -->
+</fg-grid>
+
+<!-- Angular will output -->
+<fg-grid class="container-fluid">
+  <fg-row class="row">
+    <!-- Some columns -->
+  </fg-row>
+  <!-- ... More rows -->
+</fg-grid>
+```
+
+> I might change `fgFluid` to be an `input` for next minor release of the package
+
+
+## TODO
+
+- [ ] Add tests
+- [ ] Add validation for unexpected values passed to rows and columns
+- [ ] Add support for reordering columns with `.first-` and `.last-` (might use a directive)
 
 ## Demo
 
